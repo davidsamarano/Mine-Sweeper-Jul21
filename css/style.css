@@ -1,0 +1,14 @@
+.board td {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    transition: background-color 0.5s;
+}
+
+.board td:hover {
+    background-color: lightsalmon;
+}
+
+.occupied {
+    background-color: lightgray;
+}
