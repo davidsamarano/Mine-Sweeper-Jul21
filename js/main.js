@@ -34,7 +34,7 @@ function createCell(isMine = false, minesAroundCount = 0) {
     return {
         isMine,
         minesAroundCount,
-        isShown: true,
+        isShown: false,
         isMarked: true
     };
 }
@@ -85,8 +85,11 @@ function renderBoard(board) {
         for (var j = 0; j < board[0].length; j++) {
 
             var currCell = board[i][j];
+            var isShown = currCell.isShown;
             var contentToShow = currCell.isMine ?
                 MINE : currCell.minesAroundCount ? currCell.minesAroundCount : '';
+            // Present content or hude it
+            contentToShow = isShown ? contentToShow : '';
 
             var className = currCell ? 'occupied' : ''
 
@@ -102,5 +105,34 @@ function renderBoard(board) {
 
     var elTable = document.querySelector('.board')
     elTable.innerHTML = strHTML
-
 }
+
+function cellClicked(elCell, cellI, cellJ) {
+    
+    // Check data
+    // console.log(elCell.dataset);
+    // console.log('cellI: ', cellI);
+    // console.log('cellJ: ', cellJ);
+
+    gBoard[cellI][cellJ].isShown = true;
+    renderBoard(gBoard);
+}
+
+function getSize(size, minesCount, elBtn) {
+
+    var elSizeBtns = document.querySelectorAll('.level');
+
+    for (var i = 0; i < elSizeBtns.length; i++) {
+        if (elSizeBtns[i] === elBtn) elBtn.classList.add('button-clicked');
+        else if (elSizeBtns[i].classList.contains('button-clicked')) {
+            elSizeBtns[i].classList.remove('button-clicked');
+        }
+    }
+    gLevel.size = size;
+    gLevel.minesCount = minesCount;
+    initGame()
+    // gBoard = createBoard();
+    // renderBoard(gBoard);
+    // resetGame();
+}
+

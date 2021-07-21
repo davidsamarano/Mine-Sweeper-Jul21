@@ -1,3 +1,5 @@
+body{text-align: center;}
+
 .board td {
     width: 30px;
     height: 30px;
@@ -11,4 +13,33 @@
 
 .occupied {
     background-color: lightgray;
+}
+
+/* -------------- */
+
+table, th, td {
+    margin: auto;
+}
+
+.game-time, .smily-element,.lives {
+    padding: 10px;
+    display: inline-block;
+    margin-bottom: 10px;
+    background-color: rgb(241, 145, 145);
+    border: burlywood 3px solid;
+}
+
+button {
+    margin-top: 15px;
+    padding: 6px;
+    border-radius: 50%;
+    border: 2px solid rgb(76, 88, 88);
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.button-clicked {
+    background-color: grey;
 }
