@@ -135,12 +135,24 @@ function cellClicked(elCell, cellI, cellJ) {
     } else if (currCell.minesAroundCount) {
         currCell.isShown = true;
     } else {
-        // getNegsExpend();
-        console.log('getNegsExpend!! on:', cellI, cellJ);
+        getNegsExpend(cellI, cellJ, gBoard);
+        console.log('Negs view expend on:', cellI, cellJ);
     }
-
-    // gBoard[cellI][cellJ].isShown = true;
+    
     renderBoard(gBoard);
+}
+
+function getNegsExpend(cellI, cellJ, board) {
+
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= board.length) continue;
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (i === cellI && j === cellJ) continue;
+            if (j < 0 || j >= board[i].length) continue;
+            var currCell = board[i][j]
+            if (!currCell.isMine) currCell.isShown = true;
+        }
+    }
 }
 
 function getSize(size, minesCount, elBtn) {
