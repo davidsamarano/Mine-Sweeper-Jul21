@@ -1,6 +1,7 @@
 'use strict'
 
 const MINE = '💣';
+const FLAG = '🚩';
 
 // Model
 var gBoard;
@@ -21,16 +22,14 @@ var gGame = {
 
 var gLevel = {
     size: 4,
-    minesCount: 2
+    minesCount: 1
 };
 
 // Time
 var gStartPointTime;
 var gCurrTime;
 var gTimeInterval;
-// var gDurationInSeconds;
 var gIsTimePoint;
-
 
 function initGame() {
 
@@ -63,14 +62,12 @@ function createBoard() {
         for (var j = 0; j < gLevel.size; j++) {
 
             var isMine = mines[minesIdx] === MINE;
-            // var negsCount = countNeighbors(i, j, board);;
             board[i][j] = createCell(isMine);
             minesIdx++;
         }
     }
     setMinesNegsCount(board);
-    // Check board
-    // console.log('board: ', board);
+    
     return board;
 }
 
@@ -102,10 +99,10 @@ function renderBoard(board) {
             // Present content or hude it
             contentToShow = isShown ? contentToShow : '';
 
-            var className = currCell ? 'occupied' : ''
+            var className = currCell.isShown && !contentToShow ? 'reveal-empty' : '';
 
-            // strHTML += '\t<td class="' + className + '">' + currCell + '</td>\n'
             strHTML += `<td data-i="${i}" data-j="${j}" 
+            oncontextmenu="javascript:rightClick(${i},${j});return false;"
             onclick="cellClicked(this,${i},${j})" 
             class="${className}">${contentToShow}</td>`
         }
@@ -113,17 +110,25 @@ function renderBoard(board) {
     }
     // Check str
     // console.log(strHTML);
-
     var elTable = document.querySelector('.board')
     elTable.innerHTML = strHTML
+}
+
+
+// MouseEvent handling 
+function rightClick(i, j) {
+
+    getStartTimePoint();
+    console.log('right click on', i, j);
 }
 
 function cellClicked(elCell, cellI, cellJ) {
 
     if (!gGame.isOn) return;
     getStartTimePoint();
+    
     // Check data
-    // console.log(elCell);
+    console.log(elCell);
     // console.log(elCell.dataset);
     // console.log('cellI: ', cellI);
     // console.log('cellJ: ', cellJ);
@@ -134,11 +139,16 @@ function cellClicked(elCell, cellI, cellJ) {
         gameOver();
     } else if (currCell.minesAroundCount) {
         currCell.isShown = true;
+        isVictory(gBoard);
     } else {
+        if (!elCell.classList.contains('reveal-empty')) {
+            elCell.classList.add('reveal-empty');
+        }
         getNegsExpend(cellI, cellJ, gBoard);
         console.log('Negs view expend on:', cellI, cellJ);
+        isVictory(gBoard);
     }
-    
+
     renderBoard(gBoard);
 }
 
@@ -170,16 +180,12 @@ function getSize(size, minesCount, elBtn) {
     gLevel.size = size;
     gLevel.minesCount = minesCount;
     initGame();
-    // gBoard = createBoard();
-    // renderBoard(gBoard);
-    // resetGame();
 }
 
 function getTimeDurationView() {
 
     gCurrTime = Date.now();
     gGame.secsPassed = ((gCurrTime - gStartPointTime) / 1000).toFixed(3);
-    // gDurationInSeconds = ((gCurrTime - gStartPointTime) / 1000).toFixed(3);
 
     var elTimer = document.querySelector('.timer');
     elTimer.innerText = gGame.secsPassed;
@@ -193,20 +199,42 @@ function getStartTimePoint() {
     } else return;
 }
 
-function gameOver() {
+function gameOver(isVictory) {
 
+    var smilyIcon = isVictory ? `😎` : `🤯`;
+    document.querySelector('.smily-icon').innerText = smilyIcon;
+    var msg = isVictory ? `You Won !` : `Game Over`;
+    document.querySelector('.msg').innerText = msg;
     clearInterval(gTimeInterval);
     gGame.isOn = false;
     document.querySelector('.game-over-modal').style.display = 'block';
 }
 
 function resetGame() {
-    // For randoom click reset
+    
+    // For randoom click reset if needed
     gIsTimePoint = false;
     clearInterval(gTimeInterval);
+    document.querySelector('.smily-icon').innerHTML = `😃`;
 
     document.querySelector('.game-over-modal').style.display = 'none';
     initGame();
+}
+
+function isVictory(board) {
+
+    var count = 0;
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board.length; j++) {
+
+            var isCurrCellShown = board[i][j].isShown;
+            if (isCurrCellShown) count++;
+            if (count === (gLevel.size ** 2 - gLevel.minesCount)) {
+                gameOver(true);
+                return;
+            }
+        }
+    }
 }
 
 

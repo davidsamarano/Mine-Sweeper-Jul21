@@ -1,4 +1,6 @@
-body{text-align: center;}
+body {
+    text-align: center;
+}
 
 .board td {
     width: 30px;
@@ -11,8 +13,16 @@ body{text-align: center;}
     background-color: lightsalmon;
 }
 
-.occupied {
+/* .occupied {
     background-color: lightgray;
+} */
+
+td {
+    background-color: lightgray;
+}
+
+.reveal-empty {
+    background-color: rgb(185, 182, 182);;
 }
 
 /* -------------- */
@@ -21,7 +31,7 @@ table, th, td {
     margin: auto;
 }
 
-.game-time, .smily-element,.lives {
+.game-time, .smily-element, .lives {
     padding: 10px;
     display: inline-block;
     margin-bottom: 10px;
@@ -46,7 +56,6 @@ button:hover {
     background-color: grey;
 }
 
-
 .game-over-modal {
     opacity: 0.7;
     color: cornflowerblue;
@@ -68,7 +77,7 @@ button:hover {
     border-radius: 7px;
 }
 
-.footer{
+.footer {
     font-weight: bolder;
     /* position: absolute; */
     position: relative;
