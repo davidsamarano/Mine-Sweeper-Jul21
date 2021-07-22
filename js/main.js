@@ -25,6 +25,8 @@ var gTimeInterval;
 var gIsTimePoint;
 
 // Sounds
+const audioGameOver = new Audio('sound/game over.wav');
+const audioWin = new Audio('sound/win.wav');
 
 function initGame() {
 
@@ -89,15 +91,16 @@ function renderBoard(board) {
 
             var currCell = board[i][j];
 
-            var isShown = currCell.isShown;
-
-            var contentToShow = 
+            var isShown = currCell.isShown && !currCell.isMarked;
+            var contentToShow =
                 currCell.isMine ?
                     MINE : currCell.minesAroundCount ?
                         currCell.minesAroundCount : '';
 
             // Present content or hude it
             contentToShow = isShown ? contentToShow : '';
+            // Present content or flag on render itarats
+            contentToShow = currCell.isMarked ? FLAG : contentToShow;
 
             var className = isShown ? 'revealed-content' : '';
             var style = renderColorStyle(currCell.minesAroundCount);
@@ -124,36 +127,34 @@ function rightClick(elCell, i, j) {
     markCell(elCell, i, j);
 }
 
-function cellClicked(elCell, cellI, cellJ) {
+function cellClicked(elCell, i, j) {
 
     if (!gGame.isOn) return;
     getStartTimePoint();
-    if (elCell.isMarked) return;
 
-    // Check data
-    // console.log(elCell.dataset);
-    // console.log('cellI: ', cellI);
-    // console.log('cellJ: ', cellJ);
-
-    var currCell = gBoard[cellI][cellJ]
+    var currCell = gBoard[i][j];
     if (currCell.isShown) return;
-    // console.log(elCell);
+    if (currCell.isMarked) return;
 
     if (currCell.isMine) {
         currCell.isShown = true;
         gameOver();
+
     } else if (currCell.minesAroundCount) {
         currCell.isShown = true;
         isVictory(gBoard);
+
     } else {
         currCell.isShown = true;
+        // if (!currCell.isMarked) currCell.isShown = true;
 
-        getNegsExpend(cellI, cellJ, gBoard);
-        // console.log('Negs view expend on:', cellI, cellJ);
+        getNegsExpend(i, j, gBoard);
+        console.log('Negs view expend on:', i, j);
         isVictory(gBoard);
     }
 
     renderBoard(gBoard);
+    console.log(gBoard);
 }
 
 function getNegsExpend(cellI, cellJ, board) {
@@ -164,7 +165,7 @@ function getNegsExpend(cellI, cellJ, board) {
             if (i === cellI && j === cellJ) continue;
             if (j < 0 || j >= board[i].length) continue;
             var currCell = board[i][j]
-            if (!currCell.isMine) currCell.isShown = true;
+            if (!currCell.isMine && !gBoard[cellI][cellJ].isMarked) currCell.isShown = true;
         }
     }
 }
@@ -205,16 +206,21 @@ function getStartTimePoint() {
 
 function markCell(elCell, i, j) {
 
-    if (elCell.isShown) return;
+
+    if (gBoard[i][j].isShown) return;
+
     elCell.isMarked = !elCell.isMarked;
     gGame.markedCount = elCell.isMarked ?
         gGame.markedCount + 1 : gGame.markedCount - 1;
-    console.log('gGame.markedCount: ', gGame.markedCount);
+    // update Model
+    gBoard[i][j].isMarked = elCell.isMarked;
 
     elCell.classList.toggle('marked');
 
     elCell.innerText = elCell.isMarked ? FLAG : '';
+
     console.log('cell:\n', elCell, 'has marked on:', i, j);
+    // renderBoard(gBoard)
 }
 
 function gameOver(isVictory) {
@@ -225,6 +231,7 @@ function gameOver(isVictory) {
     document.querySelector('.msg').innerText = msg;
     clearInterval(gTimeInterval);
     gGame.isOn = false;
+    isVictory ? audioWin.play() : audioGameOver.play();
     document.querySelector('.game-over-modal').style.display = 'block';
 }
 
