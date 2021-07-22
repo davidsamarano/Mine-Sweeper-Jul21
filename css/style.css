@@ -9,26 +9,23 @@ body {
     transition: background-color 0.5s;
 }
 
-.board td:hover {
-    background-color: lightsalmon;
-}
-
-/* .occupied {
-    background-color: lightgray;
-} */
-
-td {
-    background-color: lightgray;
-}
-
-.reveal-empty {
-    background-color: rgb(185, 182, 182);;
-}
-
-/* -------------- */
-
 table, th, td {
     margin: auto;
+}
+
+td:hover {
+    background-color: rgb(208, 255, 122);
+    cursor: pointer;
+}
+
+td, .game-time, .smily-element, .lives {
+    background-color: darkgray;
+    border: rgb(214, 214, 214) 4px solid;
+}
+
+.revealed-content {
+    background-color: rgb(145, 145, 145);
+    border: rgb(97, 97, 97) 4px solid;
 }
 
 .game-time, .smily-element, .lives {
@@ -37,8 +34,6 @@ table, th, td {
     margin-bottom: 10px;
     height: 40px;
     line-height: 20px;
-    background-color: rgb(241, 145, 145);
-    border: burlywood 3px solid;
 }
 
 button {
@@ -48,7 +43,7 @@ button {
     border: 2px solid rgb(76, 88, 88);
 }
 
-button:hover {
+.smily-element, button:hover {
     cursor: pointer;
 }
 

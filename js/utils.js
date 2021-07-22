@@ -53,3 +53,32 @@ function getShuffledMines(size, minesCount) {
     return shuffledMines;
 }
 
+function renderColorStyle(minesAroundCount) {
+
+    switch (minesAroundCount) {
+        case 1:
+            return `blue`;
+        case 2:
+            return `green`;
+        case 3:
+            return `red`;
+        case 4:
+            return `darkblue`;
+        case 5:
+            return `rgb(93, 62, 122)`;
+        case 6:
+            return `blueviolet`;
+        case 7:
+            return `yellow`;
+        case 8:
+            return `brown`;
+        default:
+            return;
+    }
+}
+
+// function renderCell(pos, value) {
+//     var elCell = document.querySelector(`[data-i="${pos.i}"][data-j="${pos.j}"]`)
+//     elCell.innerText = value
+// }
+

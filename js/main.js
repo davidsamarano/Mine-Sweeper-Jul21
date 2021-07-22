@@ -24,6 +24,8 @@ var gCurrTime;
 var gTimeInterval;
 var gIsTimePoint;
 
+// Sounds
+
 function initGame() {
 
     gGame.isOn = true;
@@ -86,17 +88,24 @@ function renderBoard(board) {
         for (var j = 0; j < board[0].length; j++) {
 
             var currCell = board[i][j];
+
             var isShown = currCell.isShown;
-            var contentToShow = currCell.isMine ?
-                MINE : currCell.minesAroundCount ? currCell.minesAroundCount : '';
+
+            var contentToShow = 
+                currCell.isMine ?
+                    MINE : currCell.minesAroundCount ?
+                        currCell.minesAroundCount : '';
+
             // Present content or hude it
             contentToShow = isShown ? contentToShow : '';
 
-            var className = currCell.isShown && !contentToShow ? 'reveal-empty' : '';
+            var className = isShown ? 'revealed-content' : '';
+            var style = renderColorStyle(currCell.minesAroundCount);
 
             strHTML += `<td data-i="${i}" data-j="${j}" 
             oncontextmenu="javascript:rightClick(this,${i},${j});return false;"
             onclick="cellClicked(this,${i},${j})" 
+            style="color: ${style};"
             class="${className}">${contentToShow}</td>`
         }
         strHTML += '</tr>\n'
@@ -107,13 +116,12 @@ function renderBoard(board) {
     elTable.innerHTML = strHTML
 }
 
-
 // MouseEvent handling 
 function rightClick(elCell, i, j) {
 
     getStartTimePoint();
     console.log('right click on', i, j);
-    markCell(elCell, i, j)
+    markCell(elCell, i, j);
 }
 
 function cellClicked(elCell, cellI, cellJ) {
@@ -123,12 +131,14 @@ function cellClicked(elCell, cellI, cellJ) {
     if (elCell.isMarked) return;
 
     // Check data
-    console.log(elCell);
     // console.log(elCell.dataset);
     // console.log('cellI: ', cellI);
     // console.log('cellJ: ', cellJ);
 
     var currCell = gBoard[cellI][cellJ]
+    if (currCell.isShown) return;
+    // console.log(elCell);
+
     if (currCell.isMine) {
         currCell.isShown = true;
         gameOver();
@@ -136,11 +146,10 @@ function cellClicked(elCell, cellI, cellJ) {
         currCell.isShown = true;
         isVictory(gBoard);
     } else {
-        if (!elCell.classList.contains('reveal-empty')) {
-            elCell.classList.add('reveal-empty');
-        }
+        currCell.isShown = true;
+
         getNegsExpend(cellI, cellJ, gBoard);
-        console.log('Negs view expend on:', cellI, cellJ);
+        // console.log('Negs view expend on:', cellI, cellJ);
         isVictory(gBoard);
     }
 
@@ -199,11 +208,12 @@ function markCell(elCell, i, j) {
     if (elCell.isShown) return;
     elCell.isMarked = !elCell.isMarked;
     gGame.markedCount = elCell.isMarked ?
-        gGame.markedCount+1 : gGame.markedCount-1;
+        gGame.markedCount + 1 : gGame.markedCount - 1;
     console.log('gGame.markedCount: ', gGame.markedCount);
 
     elCell.classList.toggle('marked');
 
+    elCell.innerText = elCell.isMarked ? FLAG : '';
     console.log('cell:\n', elCell, 'has marked on:', i, j);
 }
 
