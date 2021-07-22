@@ -6,13 +6,6 @@ const FLAG = '🚩';
 // Model
 var gBoard;
 
-var cell = {
-    minesAroundCount: 0,
-    isShown: true,
-    isMine: false,
-    isMarked: true
-};
-
 var gGame = {
     isOn: false,    // Boolean, when true we let the user play
     shownCount: 0,  // How many cells are shown
@@ -22,7 +15,7 @@ var gGame = {
 
 var gLevel = {
     size: 4,
-    minesCount: 1
+    minesCount: 2
 };
 
 // Time
@@ -46,7 +39,7 @@ function createCell(isMine = false, minesAroundCount = 0) {
         isMine,
         minesAroundCount,
         isShown: false,
-        isMarked: true
+        isMarked: false
     };
 }
 
@@ -67,7 +60,7 @@ function createBoard() {
         }
     }
     setMinesNegsCount(board);
-    
+
     return board;
 }
 
@@ -102,7 +95,7 @@ function renderBoard(board) {
             var className = currCell.isShown && !contentToShow ? 'reveal-empty' : '';
 
             strHTML += `<td data-i="${i}" data-j="${j}" 
-            oncontextmenu="javascript:rightClick(${i},${j});return false;"
+            oncontextmenu="javascript:rightClick(this,${i},${j});return false;"
             onclick="cellClicked(this,${i},${j})" 
             class="${className}">${contentToShow}</td>`
         }
@@ -116,17 +109,19 @@ function renderBoard(board) {
 
 
 // MouseEvent handling 
-function rightClick(i, j) {
+function rightClick(elCell, i, j) {
 
     getStartTimePoint();
     console.log('right click on', i, j);
+    markCell(elCell, i, j)
 }
 
 function cellClicked(elCell, cellI, cellJ) {
 
     if (!gGame.isOn) return;
     getStartTimePoint();
-    
+    if (elCell.isMarked) return;
+
     // Check data
     console.log(elCell);
     // console.log(elCell.dataset);
@@ -199,6 +194,19 @@ function getStartTimePoint() {
     } else return;
 }
 
+function markCell(elCell, i, j) {
+
+    if (elCell.isShown) return;
+    elCell.isMarked = !elCell.isMarked;
+    gGame.markedCount = elCell.isMarked ?
+        gGame.markedCount+1 : gGame.markedCount-1;
+    console.log('gGame.markedCount: ', gGame.markedCount);
+
+    elCell.classList.toggle('marked');
+
+    console.log('cell:\n', elCell, 'has marked on:', i, j);
+}
+
 function gameOver(isVictory) {
 
     var smilyIcon = isVictory ? `😎` : `🤯`;
@@ -211,7 +219,7 @@ function gameOver(isVictory) {
 }
 
 function resetGame() {
-    
+
     // For randoom click reset if needed
     gIsTimePoint = false;
     clearInterval(gTimeInterval);
