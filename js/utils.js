@@ -77,8 +77,8 @@ function renderColorStyle(minesAroundCount) {
     }
 }
 
-function renderCell(pos, value) {
-    var elCell = document.querySelector(`[data-i="${pos.i}"][data-j="${pos.j}"]`)
-    elCell.innerText = value
-}
+// function renderCell(pos, value) {
+//     var elCell = document.querySelector(`[data-i="${pos.i}"][data-j="${pos.j}"]`)
+//     elCell.innerText = value
+// }
 

@@ -172,13 +172,15 @@ function getNegsExpend(cellI, cellJ, board) {
             if (i === cellI && j === cellJ) continue;
             if (j < 0 || j >= board[i].length) continue;
             var currCell = board[i][j]
-            if (!currCell.isMine && !gBoard[cellI][cellJ].isMarked) {
+            if (!currCell.isMine && !currCell.isMarked) {
 
-                currCell.isShown = true;
-                // if (!currCell.minesAroundCount) {
+                if(currCell.isShown) continue;
+                else{
 
-                //     getNegsToExpend(i, j, gBoard);
-                // } else continue;
+                    currCell.isShown = true;
+                    if (currCell.minesAroundCount) continue;
+                    else getNegsExpend(i, j, board);
+                }
             }
         }
     }
@@ -229,6 +231,11 @@ function markCell(elCell, i, j) {
     gGame.markedCount = currCell.isMarked ?
         gGame.markedCount + 1 : gGame.markedCount - 1;
 
+    // elCell.classList.toggle('marked');
+    // console.log('elCell: ', elCell);
+
+    // elCell.innerText = currCell.isMarked ? FLAG : '';
+
     console.log('Cell', i, j, 'has',
         currCell.isMarked ? 'marked' : 'Unmarked');
     renderBoard(gBoard)
@@ -248,7 +255,8 @@ function gameOver(isVictory) {
 
 function resetGame() {
 
-    gLevel.lives = 2;
+    // when level differ than default
+    gLevel.lives = gLevel.size === 4 ? 2 : 3;
     // For randoom click reset if needed
     gIsTimePoint = false;
     clearInterval(gTimeInterval);
