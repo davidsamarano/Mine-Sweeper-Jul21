@@ -95,6 +95,11 @@ button {
     border-radius: 7px;
 }
 
+.game-over-modal button:hover {
+    font-weight: bolder;
+    background-color: darkgray;
+}
+
 /* .blow-up {
     background-image: url(../img/flam1.png);
     width: 30px;
