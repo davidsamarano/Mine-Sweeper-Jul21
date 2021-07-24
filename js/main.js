@@ -156,7 +156,6 @@ function cellClicked(elCell, i, j) {
     }
     
     currCell.isShown = true;
-    isVictory(gBoard);
 
     if (currCell.isMine) {
         gLevel.lives--;
@@ -303,18 +302,11 @@ function isVictory(board) {
     var count = 0;
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board.length; j++) {
-
             var isCurrCellShown = board[i][j].isShown;
             if (isCurrCellShown && !board[i][j].isMine) count++;
-            // if (count === (gLevel.size ** 2 - gLevel.minesCount)) {
-
-            //     if (IsAllMinesMarkedOrShown(board)) gameOver(true);
-            //     else return;
-            // }
         }
     }
     if (count === (gLevel.size ** 2 - gLevel.minesCount)) {
-
         if (IsAllMinesMarkedOrShown(board)) gameOver(true);
         else return;
     }
@@ -333,14 +325,6 @@ function IsAllMinesMarkedOrShown(board) {
             }
         }
     }
-
-    // if () {
-
-
-    //     // gameOver(true);
-    //     // return;
-    // }
-
     return count === gLevel.minesCount;
 }
 
