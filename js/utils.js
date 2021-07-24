@@ -14,31 +14,14 @@ function countNeighbors(cellI, cellJ, mat) {
     return neighborsCount;
 }
 
-// function copyMat(mat) {
-//     var newMat = [];
-//     for (var i = 0; i < mat.length; i++) {
-//         newMat[i] = []
-//         // newMat[i] = mat[i].slice();
-//         for (var j = 0; j < mat[0].length; j++) {
-//             newMat[i][j] = mat[i][j];
-//         }
-//     }
-//     return newMat;
-// }
+// // firstPos => { i:1, j:1 }
+function getShuffledMines(size, minesCount, firstPos) {
 
-function getRandomInt(min, max) {
-
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min);
-}
-
-function getShuffledMines(size, minesCount) {
-
+    var idxFromPos = size * firstPos.i + firstPos.j;
     var lenght = size ** 2;
     var count = 0;
     var mines = [];
-    for (var i = 0; i < lenght; i++) {
+    for (var i = 0; i < lenght - 1; i++) {
 
         if (count < minesCount) {
             mines.push(MINE);
@@ -47,8 +30,12 @@ function getShuffledMines(size, minesCount) {
     }
     var shuffledMines = [];
     for (var i = 0; i < lenght; i++) {
-        var currCell = mines.splice(getRandomInt(0, mines.length), 1);
-        shuffledMines.push(currCell[0]);
+
+        var currCell;
+        if (i === idxFromPos) currCell = '';
+        else currCell = mines.splice(getRandomInt(0, mines.length), 1)[0];
+        shuffledMines.push(currCell);
+        // shuffledMines.push(currCell[0]);
     }
     return shuffledMines;
 }
@@ -76,6 +63,25 @@ function renderColorStyle(minesAroundCount) {
             return `black`;
     }
 }
+
+function getRandomInt(min, max) {
+
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+// function copyMat(mat) {
+//     var newMat = [];
+//     for (var i = 0; i < mat.length; i++) {
+//         newMat[i] = [];
+//         // newMat[i] = mat[i].slice();
+//         for (var j = 0; j < mat[0].length; j++) {
+//             newMat[i][j] = mat[i][j];
+//         }
+//     }
+//     return newMat;
+// }
 
 // function renderCell(pos, value) {
 //     var elCell = document.querySelector(`[data-i="${pos.i}"][data-j="${pos.j}"]`)
