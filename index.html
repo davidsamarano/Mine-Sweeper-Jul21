@@ -10,17 +10,18 @@
 </head>
 
 <body onload="initGame()">
-    
+
     <h1>Mine Sweeper</h1>
 
     Beginner <button class="level level-clicked" onclick="getSize(4,2,2,this)"></button>
     Medium <button class="level" onclick="getSize(8,12,3,this)"></button>
-    Expert <button class="level" onclick="getSize(12,30,3,this)"></button><br><br>
+    Expert <button class="level" onclick="getSize(12,30,3,this)"></button>
 
-    <div class="game-time">Game Time:<br><span class="timer">0</span></div>&nbsp;
-    <div class="smily-element"><br>
-        <span class="smily-icon" onclick="resetGame()">😃</span> 
-    </div>&nbsp;
+    <div class="smily-element">
+        <span class="smily-icon" onclick="resetGame()">😃</span>
+    </div>
+    <div class="current-score">Score:<br><span class="current-score-view">0</span> </div>
+    <div class="game-time">Game Time:<br><span class="timer">0</span></div>
     <div class="lives">Lives:<br><span class="lives-counter"></span> </div>
 
     <table border="1" cellpadding="10">
@@ -33,8 +34,17 @@
         <button onclick="resetGame()">Play Again</button>
     </div>
 
-    <div class="footer">David Samarano</div>
-    <!-- <div class="blow-up"></div> -->
+
+    <div class="best-scores"><h2>Best Scores</h2>
+
+        <div class="score">Beginner:&nbsp;<span class="beginner-best-score">0</span></div><br>
+        <div class="score">Medium:&nbsp;&nbsp;<span class="medium-best-score">0</span></div><br>
+        <div class="score">Expert:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="expert-best-score">0</span></div>
+
+    </div>
+
+    <div class="footer">© 2021 David Samarano. All rights reserved.</div>
+
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
 </body>
